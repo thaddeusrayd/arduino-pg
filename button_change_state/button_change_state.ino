@@ -11,6 +11,9 @@ int buttonState2 = 0;
 int previousButtonState2 = 0;
 int ledState2 = LOW;
 
+int affectedLed;
+int affectedLedState = LOW;
+
 void setup() {
  pinMode(ledPin1, OUTPUT);  
  pinMode(buttonPin1, INPUT);
@@ -22,23 +25,22 @@ void setup() {
 
 void loop() {
   buttonState1 = digitalRead(buttonPin1);
-  if (buttonState1 != previousButtonState1) {
+  buttonState2 = digitalRead(buttonPin2);
+  
+  if (buttonState1 != previousButtonState1 || buttonState2 != previousButtonState2) {
     if (buttonState1 == HIGH) {
       ledState1 = !ledState1;
-      digitalWrite(ledPin1, ledState1);
-      }
-    delay(50);
-    }
-  
-  previousButtonState1 = buttonState1;
-
-  buttonState2 = digitalRead(buttonPin2);
-  if (buttonState2 != previousButtonState2 && buttonState2 == HIGH) {
+      affectedLed = ledPin1;
+      affectedLedState = ledState1;
+    } else if (buttonState2 == HIGH) {
       ledState2 = !ledState2;
-      digitalWrite(ledPin2, ledState2);
-      
-    delay(50);
+      affectedLed = ledPin2;
+      affectedLedState = ledState2;
     }
-  
+    digitalWrite(affectedLed, affectedLedState);
+    delay(50); 
+  }
+
+  previousButtonState1 = buttonState1;
   previousButtonState2 = buttonState2;
 }
